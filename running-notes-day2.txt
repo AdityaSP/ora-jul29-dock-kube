@@ -1,0 +1,794 @@
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> mkdir app
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> cd app
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -t app:latest -t app:1 .
+Sending build context to Docker daemon  2.048kB
+Step 1/3 : FROM alpine
+latest: Pulling from library/alpine
+050382585609: Pull complete
+Digest: sha256:6a92cd1fcdc8d8cdec60f33dda4db2cb1fcdcacf3410a8e05b3741f44a9b5998
+Status: Downloaded newer image for alpine:latest
+ ---> b7b28af77ffe
+Step 2/3 : RUN apk update
+ ---> Running in 310d07eab528
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/community/x86_64/APKINDEX.tar.gz
+v3.10.1-40-g92381611d0 [http://dl-cdn.alpinelinux.org/alpine/v3.10/main]
+v3.10.1-42-g2ff02c6e30 [http://dl-cdn.alpinelinux.org/alpine/v3.10/community]
+OK: 10335 distinct packages available
+ ---> 89d131df4050
+Removing intermediate container 310d07eab528
+Step 3/3 : RUN apk add apache2
+ ---> Running in 1d8243441292
+(1/6) Installing libuuid (2.33.2-r0)
+(2/6) Installing apr (1.6.5-r0)
+(3/6) Installing expat (2.2.7-r0)
+(4/6) Installing apr-util (1.6.1-r6)
+(5/6) Installing pcre (8.43-r0)
+(6/6) Installing apache2 (2.4.39-r0)
+Executing apache2-2.4.39-r0.pre-install
+Executing busybox-1.30.1-r2.trigger
+OK: 9 MiB in 20 packages
+ ---> 4e03b18006b5
+Removing intermediate container 1d8243441292
+Successfully built 4e03b18006b5
+Successfully tagged app:latest
+Successfully tagged app:1
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls alpine
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alpine              latest              b7b28af77ffe        2 weeks ago         5.58MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls app
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+app                 1                   4e03b18006b5        5 minutes ago       10.6MB
+app                 latest              4e03b18006b5        5 minutes ago       10.6MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls nginx-ping
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx-ping          latest              054db4e9013e        20 hours ago        145MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image history nginx-ping
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+054db4e9013e        20 hours ago        nginx -g daemon off;                            19.3MB  
+<missing>           6 days ago          /bin/sh -c #(nop)  CMD ["nginx" "-g" "daem...   0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  STOPSIGNAL SIGTERM           0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  EXPOSE 80                    0B      
+<missing>           6 days ago          /bin/sh -c ln -sf /dev/stdout /var/log/ngi...   22B     
+<missing>           6 days ago          /bin/sh -c set -x     && addgroup --system...   56.6MB  
+<missing>           6 days ago          /bin/sh -c #(nop)  ENV PKG_RELEASE=1~buster     0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  ENV NJS_VERSION=0.3.3        0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  ENV NGINX_VERSION=1.17.2     0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  LABEL maintainer=NGINX ...   0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop)  CMD ["bash"]                 0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop) ADD file:71ac26257198ecf...   69.2MB  
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image history app       IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+4e03b18006b5        6 minutes ago       /bin/sh -c apk add apache2                      3.6MB   
+89d131df4050        6 minutes ago       /bin/sh -c apk update                           1.42MB  
+b7b28af77ffe        2 weeks ago         /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop) ADD file:0eb5ea35741d23f...   5.58MB  
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image pull nginx:alpine
+alpine: Pulling from library/nginx
+050382585609: Already exists
+aa1504bc12ac: Pull complete
+Digest: sha256:482ead44b2203fa32b3390abdaf97cbdc8ad15c07fb03a3e68d7c35a19ad7595
+Status: Downloaded newer image for nginx:alpine
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image nginx
+
+Usage:  docker image COMMAND
+
+Manage images
+
+Options:
+      --help   Print usage
+
+Commands:
+  build       Build an image from a Dockerfile
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Display detailed information on one or more images
+  load        Load an image from a tar archive or STDIN
+  ls          List images
+  prune       Remove unused images
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rm          Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+Run 'docker image COMMAND --help' for more information on a command.
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls nginx
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx               alpine              55ceb2abad47        6 days ago          21.1MB
+nginx               1                   e445ab08b2be        6 days ago          126MB
+nginx               latest              e445ab08b2be        6 days ago          126MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls app            REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+app                 1                   4e03b18006b5        8 minutes ago       10.6MB
+app                 latest              4e03b18006b5        8 minutes ago       10.6MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -t app:latest -t app:1 .^C
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cat mypage.html
+<h1> Some file</h1>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+COPY mypage.html /var/www/localhost/htdocs
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cat mypage.html
+<h1> Some file</h1>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -t app:latest -t app:2 .
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM alpine
+ ---> b7b28af77ffe
+Step 2/4 : RUN apk update
+ ---> Using cache
+ ---> 89d131df4050
+Step 3/4 : RUN apk add apache2
+ ---> Using cache
+ ---> 4e03b18006b5
+Step 4/4 : COPY mypage.html /var/www/localhost/htdocs
+ ---> b24b35dbce51
+Successfully built b24b35dbce51
+Successfully tagged app:latest
+Successfully tagged app:2
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls app
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+app                 2                   b24b35dbce51        53 seconds ago      10.6MB
+app                 latest              b24b35dbce51        53 seconds ago      10.6MB
+app                 1                   4e03b18006b5        19 minutes ago      10.6MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image history app
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+b24b35dbce51        2 minutes ago       /bin/sh -c #(nop) COPY file:a835ea32be99f0...   20B     
+4e03b18006b5        21 minutes ago      /bin/sh -c apk add apache2                      3.6MB   
+89d131df4050        21 minutes ago      /bin/sh -c apk update                           1.42MB  
+b7b28af77ffe        2 weeks ago         /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop) ADD file:0eb5ea35741d23f...   5.58MB  
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -t app:latest -t app:2
+"docker image build" requires exactly 1 argument.
+See 'docker image build --help'.
+
+Usage:  docker image build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -t app:latest -t app:2 .
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM alpine
+ ---> b7b28af77ffe
+Step 2/4 : RUN apk update
+ ---> Using cache
+ ---> 89d131df4050
+Step 3/4 : RUN apk add apache2
+ ---> Using cache
+ ---> 4e03b18006b5
+Step 4/4 : COPY mypage1.html /var/www/localhost/htdocs
+COPY failed: stat /var/lib/docker/tmp/docker-builder050312727/mypage1.html: no such file or directory
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> mv Dockerfile /tmp
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image -f /tmp/Dockerfile build -t app:latest -t app:2
+unknown shorthand flag: 'f' in -f
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -f /tmp/Dockerfile build -t app:latest -t app:2
+unable to prepare context: path "build" not found
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -f /tmp/Dockerfile  -t app:latest -t app:2
+"docker image build" requires exactly 1 argument.
+See 'docker image build --help'.
+
+Usage:  docker image build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -f /tmp/Dockerfile  -t app:latest -t app:2 .
+unable to prepare context: the Dockerfile (/tmp/Dockerfile) must be within the build context
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cp /tmp/Dockerfile .
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -f /tmp/Dockerfile  -t app:latest -t app:2 .
+unable to prepare context: the Dockerfile (/tmp/Dockerfile) must be within the build context
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -f Dockerfile  -t app:latest -t app:2 .
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM alpine
+ ---> b7b28af77ffe
+Step 2/4 : RUN apk update
+ ---> Using cache
+ ---> 89d131df4050
+Step 3/4 : RUN apk add apache2
+ ---> Using cache
+ ---> 4e03b18006b5
+Step 4/4 : COPY mypage.html /var/www/localhost/htdocs
+ ---> Using cache
+ ---> b24b35dbce51
+Successfully built b24b35dbce51
+Successfully tagged app:latest
+Successfully tagged app:2
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cd ..
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> mkdir trial
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> cd trial/
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> docker image build -t todel .
+Sending build context to Docker daemon  2.048kB
+Step 1/6 : FROM alpine
+ ---> b7b28af77ffe
+Step 2/6 : RUN touch /tmp/f1.txt
+ ---> Running in 60d321fdb233
+ ---> 87fc737908d9
+Removing intermediate container 60d321fdb233
+Step 3/6 : RUN touch /tmp/f2.txt
+ ---> Running in b86721409d52
+ ---> 1dbfcc8297ef
+Removing intermediate container b86721409d52
+Step 4/6 : RUN touch /tmp/f3.txt
+ ---> Running in ed208bd02fd5
+ ---> 49aca8b0fcfa
+Removing intermediate container ed208bd02fd5
+Step 5/6 : RUN touchasdf /tmp/f4.txt
+ ---> Running in 3ce3f846fe21
+/bin/sh: touchasdf: not found
+The command '/bin/sh -c touchasdf /tmp/f4.txt' returned a non-zero code: 127
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> docker image build -t todel .
+Sending build context to Docker daemon  2.048kB
+Step 1/6 : FROM alpine
+ ---> b7b28af77ffe
+Step 2/6 : RUN touch /tmp/f1.txt
+ ---> Using cache
+ ---> 87fc737908d9
+Step 3/6 : RUN touch /tmp/f2.txt
+ ---> Using cache
+ ---> 1dbfcc8297ef
+Step 4/6 : RUN touch /tmp/f3.txt
+ ---> Using cache
+ ---> 49aca8b0fcfa
+Step 5/6 : RUN touch /tmp/f4.txt
+ ---> Running in f578fa4e14db
+ ---> 4d482ee82b3d
+Removing intermediate container f578fa4e14db
+Step 6/6 : RUN touch /tmp/f5.txt
+ ---> Running in f93dbabd11ff
+ ---> 0ea03a5c6df3
+Removing intermediate container f93dbabd11ff
+Successfully built 0ea03a5c6df3
+Successfully tagged todel:latest
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> vi Dockerfile                
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> docker image prune
+WARNING! This will remove all dangling images.
+Are you sure you want to continue? [y/N] y
+Total reclaimed space: 0B
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> docker image ls -a | grep none
+<none>                                                           <none>              4d482ee82b3d        2 minutes ago       5.58MB
+<none>                                                           <none>              49aca8b0fcfa        2 minutes ago       5.58MB
+<none>                                                           <none>              1dbfcc8297ef        2 minutes ago       5.58MB
+<none>                                                           <none>              87fc737908d9        2 minutes ago       5.58MB
+<none>                                                           <none>              89d131df4050        31 minutes ago      7MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> #docker image build --no-cache -t todel .
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/trial> cd ..
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> vi D
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> cd app/
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> cd ../..
+
+/c/Users/Dell lap/docker-workshop/jul29> ls
+ora-jul29-dock-kube
+
+/c/Users/Dell lap/docker-workshop/jul29> cd ..
+
+/c/Users/Dell lap/docker-workshop> ls
+'New folder'                                feb11           jul15       nginx-alpine.tar
+ al-ap                                      feb25           jul22       nginx-ping.tar
+ apr1                                       ghost.tar       jul29       nginx.conf
+ apr22                                      index.html      jun10       pinger
+ apr8                                       jan21           jun15       repositories.json
+ bash-alpine                                jan28           jun24       spring-petclinic
+ code                                       jan7            mar11       ubuntu-nginx
+ command-dec24-2.txt                        jenkins         mar4        us-mar11
+ command-withoutput-dec26-dec27-p6908.log   jenkins_home    may13       userjan11-csr.crt
+ commanddec24-1.txt                         jenkins_home2   may20       userjan11.pem
+ day2                                       jenkins_home3   may9
+ docker-compose.yml                         jul1            mysql.tar
+
+/c/Users/Dell lap/docker-workshop> cd -
+/c/Users/Dell lap/docker-workshop/jul29
+
+/c/Users/Dell lap/docker-workshop/jul29> cd ora-jul29-dock-kube/
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> ls
+ README.md                  k8s                      trial
+ app                        rough-diag.pptx         '~$rough-diag.pptx'
+ docker-command-list.docx   running-notes-day1.txt
+ dockers-slightedge.pdf     setup.md
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube> cd app/
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> l
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image ls app
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+app                 2                   b24b35dbce51        About an hour ago   10.6MB
+app                 latest              b24b35dbce51        About an hour ago   10.6MB
+app                 1                   4e03b18006b5        About an hour ago   10.6MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a| grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                        PORTS                                                                NAMES
+3ce3f846fe21        49aca8b0fcfa                                                     "/bin/sh -c 'touch..."   45 minutes ago      Exited (127) 45 minutes ago                                                                        sharp_kare
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container rm -f 3ce3f846fe21
+3ce3f846fe21
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls| grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run -d app
+5dfa15a469e639854e69c212c48ea3a392bba8bd7d0acb3f0792ffc56d05027a
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls| grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a| grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                      PORTS                                                                NAMES
+5dfa15a469e6        app                                                              "/bin/sh"                24 seconds ago      Exited (0) 16 seconds ago                                                                        nervous_keller
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container -d nginx
+unknown shorthand flag: 'd' in -d
+See 'docker container --help'.
+
+Usage:  docker container COMMAND
+
+Manage containers
+
+Options:
+      --help   Print usage
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  inspect     Display detailed information on one or more containers
+  kill        Kill one or more running containers
+  logs        Fetch the logs of a container
+  ls          List containers
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  prune       Remove all stopped containers
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  run         Run a command in a new container
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker container COMMAND --help' for more information on a command.
+
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run -d nginx
+174eefd5f7034eab19d88f7ba9e6dd06bb166cd6796481ae34e4f377ef0a52ff
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a| grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED              STATUS                      PORTS                                                                NAMES
+174eefd5f703        nginx                                                            "nginx -g 'daemon ..."   4 seconds ago        Up 2 seconds                80/tcp                                                               zealous_yonath
+5dfa15a469e6        app                                                              "/bin/sh"                About a minute ago   Exited (0) 55 seconds ago                                                                        nervous_keller
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image history app
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+b24b35dbce51        About an hour ago   /bin/sh -c #(nop) COPY file:a835ea32be99f0...   20B     
+4e03b18006b5        About an hour ago   /bin/sh -c apk add apache2                      3.6MB   
+89d131df4050        About an hour ago   /bin/sh -c apk update                           1.42MB  
+b7b28af77ffe        2 weeks ago         /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop) ADD file:0eb5ea35741d23f...   5.58MB  
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image history nginx
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+e445ab08b2be        6 days ago          /bin/sh -c #(nop)  CMD ["nginx" "-g" "daem...   0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  STOPSIGNAL SIGTERM           0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  EXPOSE 80                    0B      
+<missing>           6 days ago          /bin/sh -c ln -sf /dev/stdout /var/log/ngi...   22B     
+<missing>           6 days ago          /bin/sh -c set -x     && addgroup --system...   56.6MB  
+<missing>           6 days ago          /bin/sh -c #(nop)  ENV PKG_RELEASE=1~buster     0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  ENV NJS_VERSION=0.3.3        0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  ENV NGINX_VERSION=1.17.2     0B      
+<missing>           6 days ago          /bin/sh -c #(nop)  LABEL maintainer=NGINX ...   0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop)  CMD ["bash"]                 0B      
+<missing>           2 weeks ago         /bin/sh -c #(nop) ADD file:71ac26257198ecf...   69.2MB  
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run -d app ping google.com
+dcdd04bca7e84c082e1809f2c9fedcdaf99b1c8d76bd9ce05e1ecb2710c47391
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                     PORTS                                                                NAMES
+dcdd04bca7e8        app                                                              "ping google.com"        27 seconds ago      Up 26 seconds                                                                                   adoring_shaw
+174eefd5f703        nginx                                                            "nginx -g 'daemon ..."   4 minutes ago       Up 4 minutes               80/tcp                                                               zealous_yonath
+5dfa15a469e6        app                                                              "/bin/sh"                5 minutes ago       Exited (0) 5 minutes ago                                                                        nervous_keller
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run app ping -c4 google.com
+PING google.com (172.217.163.110): 56 data bytes
+64 bytes from 172.217.163.110: seq=0 ttl=53 time=19.086 ms
+64 bytes from 172.217.163.110: seq=1 ttl=53 time=19.743 ms
+64 bytes from 172.217.163.110: seq=2 ttl=53 time=19.581 ms
+64 bytes from 172.217.163.110: seq=3 ttl=53 time=21.768 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 19.086/20.044/21.768 ms
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                      PORTS                                                                NAMES
+1e43875ddc77        app                                                              "ping -c4 google.com"    43 seconds ago      Exited (0) 39 seconds ago                                                                        festive_bose
+dcdd04bca7e8        app                                                              "ping google.com"        3 minutes ago       Up 3 minutes                                                                                     adoring_shaw
+174eefd5f703        nginx                                                            "nginx -g 'daemon ..."   7 minutes ago       Up 7 minutes                80/tcp                                                               zealous_yonath
+5dfa15a469e6        app                                                              "/bin/sh"                8 minutes ago       Exited (0) 8 minutes ago                                                                         nervous_keller
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container logs 1e43875ddc77
+PING google.com (172.217.163.110): 56 data bytes
+64 bytes from 172.217.163.110: seq=0 ttl=53 time=19.086 ms
+64 bytes from 172.217.163.110: seq=1 ttl=53 time=19.743 ms
+64 bytes from 172.217.163.110: seq=2 ttl=53 time=19.581 ms
+64 bytes from 172.217.163.110: seq=3 ttl=53 time=21.768 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 19.086/20.044/21.768 ms
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                      PORTS                                                                NAMES
+1e43875ddc77        app                                                              "ping -c4 google.com"    3 minutes ago       Exited (0) 2 minutes ago                                                                         festive_bose
+dcdd04bca7e8        app                                                              "ping google.com"        5 minutes ago       Up 5 minutes                                                                                     adoring_shaw
+174eefd5f703        nginx                                                            "nginx -g 'daemon ..."   9 minutes ago       Up 9 minutes                80/tcp                                                               zealous_yonath
+5dfa15a469e6        app                                                              "/bin/sh"                10 minutes ago      Exited (0) 10 minutes ago                                                                        nervous_keller
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+1e43875ddc77ef0804ce326096ca2c9f010cd01c6e694b8a7e786bbf20c6d7e2
+5dfa15a469e639854e69c212c48ea3a392bba8bd7d0acb3f0792ffc56d05027a
+d25733325a72bd455e47b9fb97895d5c7859e8d2f0f5e5ec2b4b47eded0f899a
+3c7b1c1afd84f56288c3ee862dcdb87e5cfd3bac02d0aba12edc0212025844e0
+96b071a59527c2c71dd47c63507b336424d833efd995aec14fb8c2b644fda2c0
+22a7b8e7c102091b1d699858bd9259fcba4574f1f841b3585ff70e91350401fc
+71132802c2c55368761b64c66cc563b61ea5e0e8c211a60c46b4ed6ec14181bf
+77b39b6f67b12d758b73048c976c37b9cecb075c757898bc2a80f5a101a97316
+70175453d5dd3c2df78d507f197f5e7b32438e65920e4ddb9838e0ab28517c95
+5fdba45a99c7e9bd546f5827af72c03e2c6f9c99283a78210dabb944708765f4
+d655826cd0eb80cc54e23659a87ae67a1e192f6b60cb60dea981aa9f15fa20c3
+f16f2c6cc05cc2e71af11713f399c48325a24782ed9b706a9efdb91ec2de39f5
+52c7bf37911e5bf8bf7c15ef0483dfccdebb7b3e42ca309673f59f5a53403e71
+d58f496f1248c506d7584c810466fc9a8606502c1784e32a4bca6b5b6563301a
+83475e46f5a23415d81ced42d992a7661e517e5bf3f763e171e76f0760c63672
+051534019e6516d30012c3634c8cb99c6fdb2ff097d975b0d9d3099067ede546
+eb9a1097871853172dc9f6511934531dbef0cdb1260b838c772890816b5d21be
+cde1c18a63ae24ba594b73910ed1c521466ac7487d208aad57ce7b89d539fa17
+9d5e5ba09925885537fb3b8fe8ee759a1a558fdabf4834f34103025fad4f535a
+f511764ff578b66c1982c0b3d2f7f029eb246a7694284edee69a0618415dd642
+521b0b7e2e9b9e9182a173230540e6f89384d8c1fae2bab4c5f7d0707eeb49de
+f2fe68c2b2ffd32901994ca8e6afc7b1407ec6264af3a94f30b9d92754a5c681
+5aa721699854857d0031f84d0c48faca498b8361e03808c2e94f265ec8b1c974
+0af0a28e18c300039a61fddfab3c01aed71da60da9b01753d41d35cbdd044f8f
+f8fdc0499ea79f5ec27df7e5081d901ca3b3576249cd320068bfa5be2de2788f
+6b2c0f38a8c90a769c8f7da17438ba5b6cd16a931f01ace916b42b490dd1b528
+6d869b41039bc51864fcd79256f48407e09b41fc79b9578012a2a038d5d40ffd
+b37b8af2668a1b55bd7481768479a102c69f6d080c3b8cf9824eb74515b2881f
+28fafb71a6c3dd5e38a9c32d029690ccb66b0ee6c2d3821a9841dead83de4224
+dbc097f94551a7b609fba86ef025c27e164ff2b6f863c1c485646d6d4d75e04f
+03641c8ef82495419dfe218b9e9d23c97874f62ff63c6e14334070ebee0c3e38
+2453e771d740d2f0da78b035c5ea34941f960ef92bf730e466b63bb8991ff869
+
+Total reclaimed space: 1.567MB
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+dcdd04bca7e8        app                                                              "ping google.com"        9 minutes ago       Up 9 minutes                                                                             adoring_shaw
+174eefd5f703        nginx                                                            "nginx -g 'daemon ..."   14 minutes ago      Up 14 minutes       80/tcp                                                               zealous_yonath
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container exec -it dcdd04bca7e8 sh
+/ # bash
+sh: bash: not found
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+    7 root      0:00 sh
+   12 root      0:00 ps
+/ #
+/ #
+/ # httpd
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 172.17.0.16. Set the 'ServerName' directive globally to suppress this message
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+    7 root      0:00 sh
+   14 root      0:00 httpd
+   15 apache    0:00 httpd
+   16 apache    0:00 httpd
+   17 apache    0:00 httpd
+   18 apache    0:00 httpd
+   19 apache    0:00 httpd
+   20 root      0:00 ps
+/ # exit
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+dcdd04bca7e8        app                                                              "ping google.com"        17 minutes ago      Up 17 minutes                                                                            adoring_shaw
+174eefd5f703        nginx                                                            "nginx -g 'daemon ..."   22 minutes ago      Up 22 minutes       80/tcp                                                               zealous_yonath
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container rm -f dcdd04bca7e8 174eefd5f703
+dcdd04bca7e8
+174eefd5f703
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run -d app httpd -D FOREGROUND
+15c49d140a2720a4446a46c7381d4c01baa586896be65e908ee935c872e74c2d
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+15c49d140a27        app                                                              "httpd -D FOREGROUND"    28 seconds ago      Up 27 seconds                                                                            loving_kare
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container exec -it 15c49d140a27  sh
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 httpd -D FOREGROUND
+    6 apache    0:00 httpd -D FOREGROUND
+    7 apache    0:00 httpd -D FOREGROUND
+    8 apache    0:00 httpd -D FOREGROUND
+    9 apache    0:00 httpd -D FOREGROUND
+   10 apache    0:00 httpd -D FOREGROUND
+   11 root      0:00 sh
+   16 root      0:00 ps
+/ # culr
+sh: culr: not found
+/ # curl
+sh: curl: not found
+/ # apk add curl
+(1/4) Installing ca-certificates (20190108-r0)
+(2/4) Installing nghttp2-libs (1.38.0-r0)
+(3/4) Installing libcurl (7.65.1-r0)
+(4/4) Installing curl (7.65.1-r0)
+Executing busybox-1.30.1-r2.trigger
+Executing ca-certificates-20190108-r0.trigger
+OK: 11 MiB in 24 packages
+/ # curl localhost
+<html><body><h1>It works!</h1></body></html>
+/ # curl localhost/mypage.html
+<h1> Some file</h1>
+/ #
+/ #
+/ #
+/ #
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                        PORTS                                                                NAMES
+15c49d140a27        app                                                              "httpd -D FOREGROUND"    22 minutes ago      Exited (137) 35 seconds ago                                                                        loving_kare
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app>
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> la
+-bash: la: command not found
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> ls
+Dockerfile  mypage.html
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker image build -t app:latest -t app:3 .
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM alpine
+ ---> b7b28af77ffe
+Step 2/4 : RUN apk update     && apk add apache2
+ ---> Running in fc465c587c13
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.10/community/x86_64/APKINDEX.tar.gz
+v3.10.1-40-g92381611d0 [http://dl-cdn.alpinelinux.org/alpine/v3.10/main]
+v3.10.1-42-g2ff02c6e30 [http://dl-cdn.alpinelinux.org/alpine/v3.10/community]
+OK: 10335 distinct packages available
+(1/6) Installing libuuid (2.33.2-r0)
+(2/6) Installing apr (1.6.5-r0)
+(3/6) Installing expat (2.2.7-r0)
+(4/6) Installing apr-util (1.6.1-r6)
+(5/6) Installing pcre (8.43-r0)
+(6/6) Installing apache2 (2.4.39-r0)
+Executing apache2-2.4.39-r0.pre-install
+Executing busybox-1.30.1-r2.trigger
+OK: 9 MiB in 20 packages
+ ---> 7abd5ab00ef6
+Removing intermediate container fc465c587c13
+Step 3/4 : COPY mypage.html /var/www/localhost/htdocs
+ ---> 46830290fa86
+Step 4/4 : CMD httpd -D FOREGROUND
+ ---> Running in 82eae549e2ac
+ ---> 1a9ce5c0760c
+Removing intermediate container 82eae549e2ac
+Successfully built 1a9ce5c0760c
+Successfully tagged app:latest
+Successfully tagged app:3
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run -d -p 9090:80 app
+2a56ff760f97496630b4ab22659d7affdf67eae057825a13b4236f6cf10e15fb
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container ls -a | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                        PORTS                                                                NAMES
+2a56ff760f97        app                                                              "httpd -D FOREGROUND"    7 seconds ago       Up 6 seconds                  0.0.0.0:9090->80/tcp                                                 affectionate_booth
+15c49d140a27        b24b35dbce51                                                     "httpd -D FOREGROUND"    36 minutes ago      Exited (137) 14 minutes ago                                                                        loving_kare
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run --help |-P
+-bash: -P: command not found
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run --help |grep -P
+grep: invalid option -- 'P'
+BusyBox v1.27.2 (2018-01-23 22:48:35 UTC) multi-call binary.
+
+Usage: grep [-HhnlLoqvsriwFE] [-m N] [-A/B/C N] PATTERN/-e PATTERN.../-f FILE [FILE]...
+
+Search for PATTERN in FILEs (or stdin)
+
+        -H      Add 'filename:' prefix
+        -h      Do not add 'filename:' prefix
+        -n      Add 'line_no:' prefix
+        -l      Show only names of files that match
+        -L      Show only names of files that don't match
+        -c      Show only count of matching lines
+        -o      Show only the matching part of line
+        -q      Quiet. Return 0 if PATTERN is found, 1 otherwise
+        -v      Select non-matching lines
+        -s      Suppress open and read errors
+        -r      Recurse
+        -i      Ignore case
+        -w      Match whole words only
+        -x      Match whole lines only
+        -F      PATTERN is a literal (not regexp)
+        -E      PATTERN is an extended regexp
+        -m N    Match up to N times per file
+        -A N    Print N lines of trailing context
+        -B N    Print N lines of leading context
+        -C N    Same as '-A N -B N'
+        -e PTRN Pattern to match
+        -f FILE Read pattern from file
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run --help |grep "-P"
+grep: invalid option -- 'P'
+BusyBox v1.27.2 (2018-01-23 22:48:35 UTC) multi-call binary.
+
+Usage: grep [-HhnlLoqvsriwFE] [-m N] [-A/B/C N] PATTERN/-e PATTERN.../-f FILE [FILE]...
+
+Search for PATTERN in FILEs (or stdin)
+
+        -H      Add 'filename:' prefix
+        -h      Do not add 'filename:' prefix
+        -n      Add 'line_no:' prefix
+        -l      Show only names of files that match
+        -L      Show only names of files that don't match
+        -c      Show only count of matching lines
+        -o      Show only the matching part of line
+        -q      Quiet. Return 0 if PATTERN is found, 1 otherwise
+        -v      Select non-matching lines
+        -s      Suppress open and read errors
+        -r      Recurse
+        -i      Ignore case
+        -w      Match whole words only
+        -x      Match whole lines only
+        -F      PATTERN is a literal (not regexp)
+        -E      PATTERN is an extended regexp
+        -m N    Match up to N times per file
+        -A N    Print N lines of trailing context
+        -B N    Print N lines of leading context
+        -C N    Same as '-A N -B N'
+        -e PTRN Pattern to match
+        -f FILE Read pattern from file
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run --help |grep "\-P"
+  -P, --publish-all                    Publish all exposed ports to random ports
+
+/c/Users/Dell lap/docker-workshop/jul29/ora-jul29-dock-kube/app> docker container run -d -p 9090:80 app
