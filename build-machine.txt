@@ -14,3 +14,12 @@ RUN apt-get install -y git
 ----------------------------------------------------------------------------------------------------------------
 
  docker container run -d -v /var/run/docker.sock:/var/run/docker.sock -v /etc/kubernetes/admin.conf:/etc/config -e KUBECONFIG=/etc/config -v /vagrant/jenkins_home5:/var/jenkins_home -p 9090:8080 build-machine
+
+
+--------------------------------------------------------------- Porject settings -------------------------------
+docker image build -t adityaprabhakara/appaug2:$BUILD_NUMBER .
+docker login -uadityaprabhakara -p
+docker image push adityaprabhakara/appaug2:$BUILD_NUMBER
+sed -i "s/DOCKERUSER/adityaprabhakara/" dep.yml
+sed -i "s/IMAGENAME/appaug2/" dep.yml
+sed -i "s/BUILDNUMBER/${BUILD_NUMBER}/" dep.yml
