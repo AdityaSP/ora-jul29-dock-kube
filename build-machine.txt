@@ -18,8 +18,9 @@ RUN apt-get install -y git
 
 --------------------------------------------------------------- Porject settings -------------------------------
 docker image build -t adityaprabhakara/appaug2:$BUILD_NUMBER .
-docker login -uadityaprabhakara -p
+docker login -uadityaprabhakara -p$DOCK_PWD
 docker image push adityaprabhakara/appaug2:$BUILD_NUMBER
 sed -i "s/DOCKERUSER/adityaprabhakara/" dep.yml
 sed -i "s/IMAGENAME/appaug2/" dep.yml
 sed -i "s/BUILDNUMBER/${BUILD_NUMBER}/" dep.yml
+kubectl apply -f dep.yml
