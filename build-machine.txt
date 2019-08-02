@@ -1,3 +1,5 @@
+
+-------------------------------------------------Dockerfile--------------------------------------------------
 FROM jenkins/jenkins:lts
 USER root
 RUN apt-get update -qq \
@@ -9,3 +11,6 @@ RUN apt-get update -qq \
 RUN usermod -aG docker jenkins
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && mv kubectl /bin && chmod +x /bin/kubectl
 RUN apt-get install -y git
+----------------------------------------------------------------------------------------------------------------
+
+ docker container run -d -v /var/run/docker.sock:/var/run/docker.sock -v /etc/kubernetes/admin.conf:/etc/config -e KUBECONFIG=/etc/config -v /vagrant/jenkins_home5:/var/jenkins_home -p 9090:8080 build-machine
